@@ -1,0 +1,10 @@
+{
+  "name": "watch-process-death",
+  "version": "1.0.0",
+  "description": "Watching the death of Node.js process",
+  "main": "index.ts",
+  "types": "index.d.ts",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
