@@ -2,8 +2,16 @@ type callbackType = (eventName: string) => void
 let isProcessWatchingStarted = false
 const callbackList: Array<callbackType> = []
 
-const exitHandler = async function (options: any = {}, error) {
-    const eventName = options.eventName
+const exitHandler = async function (
+    {
+        eventName,
+        withExit,
+    }: {
+        eventName: string
+        withExit: boolean
+    },
+    error
+) {
     if (eventName === 'uncaughtException') {
         console.error(error)
         return
@@ -13,7 +21,7 @@ const exitHandler = async function (options: any = {}, error) {
     }
     console.log('error:', error, eventName)
     await Promise.all(callbackList.map(callback => callback(eventName)))
-    if (options.exit) {
+    if (withExit) {
         // setTimeout(process.exit, 10000)
         process.exit()
     }
@@ -24,28 +32,31 @@ export const startProcessDeathWatching = () => {
     // do something when app is closing
     process.on(
         'exit',
-        exitHandler.bind(null, { eventName: 'exit', exit: true })
+        exitHandler.bind(null, { eventName: 'exit', withExit: true })
     )
     // catches ctrl+c event
     process.on(
         'SIGINT',
-        exitHandler.bind(null, { eventName: 'SIGINT', exit: true })
+        exitHandler.bind(null, { eventName: 'SIGINT', withExit: true })
     )
 
     //  catches "kill pid" (for example: nodemon restart)
     process.on(
         'SIGUSR1',
-        exitHandler.bind(null, { eventName: 'SIGUSR1', exit: true })
+        exitHandler.bind(null, { eventName: 'SIGUSR1', withExit: true })
     )
     process.on(
         'SIGUSR2',
-        exitHandler.bind(null, { eventName: 'SIGUSR2', exit: true })
+        exitHandler.bind(null, { eventName: 'SIGUSR2', withExit: true })
     )
     // catches uncaught exceptions
     // отлавливает exceptions и не дает завершиться процессу
     process.on(
         'uncaughtException',
-        exitHandler.bind(null, { eventName: 'uncaughtException', exit: true })
+        exitHandler.bind(null, {
+            eventName: 'uncaughtException',
+            withExit: true,
+        })
     )
 
     isProcessWatchingStarted = true
