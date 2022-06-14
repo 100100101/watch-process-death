@@ -66,7 +66,7 @@ export const startProcessDeathWatching = () => {
         'uncaughtException',
         exitHandler.bind(null, {
             eventName: 'uncaughtException',
-            withExit: true,
+            withExit: false,
         })
     )
 
