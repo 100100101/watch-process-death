@@ -1,30 +1,53 @@
 type callbackType = (eventName: string) => void
 let isProcessWatchingStarted = false
 const callbackList: Array<callbackType> = []
-
-const exitHandler = async function (
-    {
-        eventName,
-        withExit,
-    }: {
-        eventName: string
-        withExit: boolean
-    },
+type TOptions = {
+    isExit: boolean
+    eventName:
+        | 'exit'
+        | 'SIGINT'
+        | 'SIGUSR1'
+        | 'SIGUSR2'
+        | 'uncaughtException'
+        | ''
+}
+const exitHandler = async (
+    { isExit = false, eventName = '' }: TOptions,
     error
-) {
-    if (eventName === 'uncaughtException') {
-        console.error(error)
-        return
-    }
-    if (eventName === 'exit') {
-        return
-    }
-    console.log('error:', error, eventName)
-    await Promise.all(callbackList.map(callback => callback(eventName)))
-    if (withExit) {
-        // setTimeout(process.exit, 10000)
-        process.exit()
-    }
+) => {
+    console.log(
+        `%c❗ Error event '${eventName}' : `,
+        'color: #ff6860',
+        'with process exit:',
+        isExit,
+        error,
+        `❗`
+    )
+
+    if (!isExit) return
+    const exitHandler = async function (
+        {
+            eventName,
+            withExit,
+        }: {
+            eventName: string
+            withExit: boolean
+        },
+        error
+    ) {
+        if (eventName === 'uncaughtException') {
+            console.error(error)
+            return
+        }
+        if (eventName === 'exit') {
+            return
+        }
+        console.log('error:', error, eventName)
+        await Promise.all(callbackList.map(callback => callback(eventName)))
+        if (withExit) {
+            // setTimeout(process.exit, 10000)
+            process.exit()
+        }
 }
 
 export const startProcessDeathWatching = () => {
@@ -44,10 +67,10 @@ export const startProcessDeathWatching = () => {
     process.on(
         'SIGUSR1',
         exitHandler.bind(null, { eventName: 'SIGUSR1', withExit: true })
-    )
-    process.on(
-        'SIGUSR2',
-        exitHandler.bind(null, { eventName: 'SIGUSR2', withExit: true })
+        )
+        process.on(
+            'SIGUSR2',
+            exitHandler.bind(null, { eventName: 'SIGUSR2', withExit: true })
     )
     // catches uncaught exceptions
     // отлавливает exceptions и не дает завершиться процессу
