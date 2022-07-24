@@ -76,8 +76,6 @@ export const startProcessDeathWatching = (props: TPtrops = {}) => {
     }
     const eventsOptions = Object.assign(defaultEventsOptions, props)
 
-    console.log('eventsOptions:', eventsOptions)
-
     for (const eventEntry of Object.entries(eventsOptions)) {
         const [eventName, eventOptions]: any = eventEntry
         const { withExit } = eventOptions
