@@ -3,18 +3,13 @@ let isProcessWatchingStarted = false
 const callbackList: Array<callbackType> = []
 type TOptions = {
     withExit: boolean
-    eventName:
-        | 'exit'
-        | 'SIGINT'
-        | 'SIGUSR1'
-        | 'SIGUSR2'
-        | 'uncaughtException'
-        | ''
+    eventName: 'exit' | 'SIGINT' | 'SIGUSR1' | 'SIGUSR2' | 'uncaughtException'
 }
 const exitHandler = async (
-    { withExit = false, eventName = '' }: TOptions,
+    { withExit = false, eventName }: TOptions,
     error
 ) => {
+    if (!eventName) return
     console.log(
         `%c❗ Error event '${eventName}' : `,
         'color: #ff6860',
@@ -38,37 +33,56 @@ const exitHandler = async (
     }
 }
 
-export const startProcessDeathWatching = () => {
+type TPtrops = {
+    exit?: {
+        withExit: boolean
+    }
+    SIGINT?: {
+        withExit: boolean
+    }
+    SIGUSR1?: {
+        withExit: boolean
+    }
+    SIGUSR2?: {
+        withExit: boolean
+    }
+    uncaughtException?: {
+        withExit: boolean
+    }
+}
+export const startProcessDeathWatching = (props: TPtrops = {}) => {
     process.stdin.resume()
-    // do something when app is closing
-    process.on(
-        'exit',
-        exitHandler.bind(null, { eventName: 'exit', withExit: true })
-    )
-    // catches ctrl+c event
-    process.on(
-        'SIGINT',
-        exitHandler.bind(null, { eventName: 'SIGINT', withExit: true })
-    )
+    const defaultEventsOptions = {
+        // do something when app is closing
+        exit: {
+            withExit: true,
+        },
+        // catches ctrl+c event
+        SIGINT: {
+            withExit: true,
+        },
+        //  catches "kill pid" (for example: nodemon restart)
+        SIGUSR1: {
+            withExit: true,
+        },
+        SIGUSR2: {
+            withExit: true,
+        },
+        // catches uncaught exceptions
+        // отлавливает exceptions и не дает завершиться процессу
+        uncaughtException: {
+            withExit: true,
+        },
+    }
+    const eventsOptions = Object.assign(defaultEventsOptions, props)
 
-    //  catches "kill pid" (for example: nodemon restart)
-    process.on(
-        'SIGUSR1',
-        exitHandler.bind(null, { eventName: 'SIGUSR1', withExit: true })
-    )
-    process.on(
-        'SIGUSR2',
-        exitHandler.bind(null, { eventName: 'SIGUSR2', withExit: true })
-    )
-    // catches uncaught exceptions
-    // отлавливает exceptions и не дает завершиться процессу
-    process.on(
-        'uncaughtException',
-        exitHandler.bind(null, {
-            eventName: 'uncaughtException',
-            withExit: false,
-        })
-    )
+    console.log('eventsOptions:', eventsOptions)
+
+    for (const eventEntry of Object.entries(eventsOptions)) {
+        const [eventName, eventOptions]: any = eventEntry
+        const { withExit } = eventOptions
+        process.on(eventName, exitHandler.bind(null, { eventName, withExit }))
+    }
 
     isProcessWatchingStarted = true
 }
