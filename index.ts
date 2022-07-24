@@ -37,7 +37,7 @@ export const startProcessDeathWatching = () => {
     // do something when app is closing
     process.on(
         'exit',
-        exitHandler.bind(null, { eventName: 'exit', isExit: false })
+        exitHandler.bind(null, { eventName: 'exit', isExit: true })
     )
     // catches ctrl+c event
     process.on(
