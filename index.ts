@@ -10,8 +10,9 @@ const exitHandler = async (
     error
 ) => {
     if (!eventName) return
+    error = error.toString() === '0' ? '0 (sucess)' : error
     console.log(
-        `%c❗ Error event '${eventName}' : `,
+        `%c❗ Event '${eventName}' : `,
         'color: #ff6860',
         'with process exit:',
         withExit,
