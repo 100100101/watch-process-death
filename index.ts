@@ -20,7 +20,7 @@ const exitHandler = async (
         `❗`
     )
     if (eventName === 'uncaughtException') {
-        console.error(error)
+        // console.error(error)
         return
     }
     if (eventName === 'exit') {
