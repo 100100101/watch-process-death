@@ -7,26 +7,35 @@ type TOptions = {
 }
 const exitHandler = async (
     { withExit = false, eventName }: TOptions,
-    error
+    errorOrErrorCode
 ) => {
     if (!eventName) return
-    error = error.toString() === '0' ? '0 (sucess)' : error
-    console.log(
-        `%c❗ Event '${eventName}' : `,
-        'color: #ff6860',
-        'with process exit:',
-        withExit,
-        error,
-        `❗`
-    )
-    if (eventName === 'uncaughtException') {
-        console.error(error)
-        return
+    const isErrorCode = typeof errorOrErrorCode === 'number'
+    const errorMessage = ''
+    if (isErrorCode) {
+        const isSuccessCode = errorOrErrorCode === 0
+        console.table({
+            Event: {
+                value: eventName,
+            },
+            'With process exit': {
+                value: withExit,
+            },
+            Message: {
+                value: isSuccessCode ? 'Is success event' : '',
+            },
+        })
+    } else {
+        if (eventName === 'uncaughtException') {
+            console.error(errorOrErrorCode)
+            return
+        }
     }
+
     if (eventName === 'exit') {
         return
     }
-    console.log('error:', error, eventName)
+    console.log('errorOrErrorCode:', errorOrErrorCode, eventName)
     await Promise.all(callbackList.map(callback => callback(eventName)))
     if (withExit) {
         // setTimeout(process.exit, 10000)
