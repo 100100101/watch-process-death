@@ -34,7 +34,14 @@ const exitHandler = async (
     if (eventName === 'exit') {
         return
     }
-    console.log('error:', errorOrErrorCode, eventName)
+    console.table({
+        Event: {
+            value: eventName,
+        },
+        'With process exit': {
+            value: withExit,
+        },
+    })
     await Promise.allSettled(callbackList.map(callback => callback(eventName)))
     if (withExit) {
         // setTimeout(process.exit, 10000)
