@@ -11,7 +11,6 @@ const exitHandler = async (
 ) => {
     if (!eventName) return
     const isErrorCode = typeof errorOrErrorCode === 'number'
-    const errorMessage = ''
     if (isErrorCode) {
         const isSuccessCode = errorOrErrorCode === 0
         console.table({
