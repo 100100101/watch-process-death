@@ -32,6 +32,7 @@ const exitHandler = async (
     }
 
     if (eventName === 'exit') {
+        console.error(errorOrErrorCode)
         return
     }
     console.table({
