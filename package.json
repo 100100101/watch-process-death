@@ -7,6 +7,10 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.1.1"
+},
   "devDependencies": {
     "@types/node": "^18.11.10",
     "@typescript-eslint/eslint-plugin": "^5.45.0",

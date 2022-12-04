@@ -108,5 +108,10 @@ export const watchProcessDeath = (callback: callbackType) => {
     callbackList.push(callback)
 }
 
+export default {
+    startProcessDeathWatching,
+    watchProcessDeath,
+}
+
 // process.kill(process.pid, 'SIGUSR2')
 // process.kill(process.ppid, 'SIGUSR2')
