@@ -1,3 +1,4 @@
+/// <reference types="node" />
 type callbackType = (eventName: string) => void
 let isProcessWatchingStarted = false
 const callbackList: Array<callbackType> = []
