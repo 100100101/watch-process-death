@@ -1,4 +1,4 @@
-import { TStartProcessDeathWatching, TGlobalCallbackList } from './types'
+import { TStartProcessDeathWatching, TGlobalCallbackList } from '../types'
 import { exitHandler } from './exitHandler'
 import { GLOBAL_CALLBACK_LIST_PROP_NAME } from './constants'
 

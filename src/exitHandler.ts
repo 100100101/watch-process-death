@@ -1,5 +1,5 @@
 import { GLOBAL_CALLBACK_LIST_PROP_NAME } from './constants'
-import { TExitHandler } from './types'
+import { TExitHandler } from '../types'
 export const exitHandler: TExitHandler = async (
     { withExit = false, eventName },
     errorOrErrorCode

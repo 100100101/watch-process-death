@@ -1,5 +1,5 @@
 import { GLOBAL_CALLBACK_LIST_PROP_NAME } from './constants'
-import { TWatchProcessDeath } from './types'
+import { TWatchProcessDeath } from '../types'
 import { startProcessDeathWatching } from './startProcessDeathWatching'
 // let isProcessWatchingStarted = false
 // globalThis.isProcessWatchingStarted = false

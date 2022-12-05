@@ -2,8 +2,8 @@
   "name": "watch-process-death",
   "version": "1.0.0",
   "description": "Watching the death of Node.js process",
-  "main": "index.ts",
-  "types": "index.d.ts",
+  "main": "src/index.ts",
+  "types": "types.d.ts",
   "keywords": [],
   "author": "",
   "license": "ISC"
