@@ -8,17 +8,17 @@ export const exitHandler: TExitHandler = async (
     const isErrorCode = typeof errorOrErrorCode === 'number'
     if (isErrorCode) {
         const isSuccessCode = errorOrErrorCode === 0
-        // console.table({
-        //     Event: {
-        //         value: eventName,
-        //     },
-        //     'With process exit': {
-        //         value: withExit,
-        //     },
-        //     Message: {
-        //         value: isSuccessCode ? 'Is success event' : '',
-        //     },
-        // })
+        console.table({
+            Event: {
+                value: eventName,
+            },
+            'With process exit': {
+                value: withExit,
+            },
+            Message: {
+                value: isSuccessCode ? 'Is success event' : '',
+            },
+        })
     } else {
         if (eventName === 'uncaughtException') {
             console.error(
@@ -33,14 +33,14 @@ export const exitHandler: TExitHandler = async (
         console.error('"exit" errorOrErrorCode:', errorOrErrorCode)
         return
     }
-    // console.table({
-    //     Event: {
-    //         value: eventName,
-    //     },
-    //     'With process exit': {
-    //         value: withExit,
-    //     },
-    // })
+    console.table({
+        Event: {
+            value: eventName,
+        },
+        'With process exit': {
+            value: withExit,
+        },
+    })
     const globalCallbackList = globalThis[GLOBAL_CALLBACK_LIST_PROP_NAME]
 
     const callbackPromises = globalCallbackList.map(callback =>
