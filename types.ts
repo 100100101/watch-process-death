@@ -22,7 +22,9 @@ export type TStartProcessDeathWatching = (
 
 export type TCallback = (eventName: string) => void
 
-export type TGlobalCallbackList = TCallback[]
+export type TGlobalCallbacks = {
+    [key: string]: TCallback
+}
 
 export type TExitHandlerOptions = {
     withExit: boolean

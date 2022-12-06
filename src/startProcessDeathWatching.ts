@@ -1,17 +1,12 @@
-import { TStartProcessDeathWatching, TGlobalCallbackList } from '../types'
+import { TStartProcessDeathWatching, TGlobalCallbacks } from '../types'
 import { exitHandler } from './exitHandler'
-import { GLOBAL_CALLBACK_LIST_PROP_NAME } from './constants'
+import { GLOBAL_CALLBACKS_PROP_NAME } from './constants'
 
 export const startProcessDeathWatching: TStartProcessDeathWatching = (
     options = {}
 ) => {
-    const globalCallbackList: TGlobalCallbackList = []
-    globalThis[GLOBAL_CALLBACK_LIST_PROP_NAME] = globalCallbackList
-
-    console.log(
-        'startProcessDeathWatching globalCallbackList:',
-        globalThis[GLOBAL_CALLBACK_LIST_PROP_NAME]
-    )
+    const globalCallbacks: TGlobalCallbacks = {}
+    globalThis[GLOBAL_CALLBACKS_PROP_NAME] = globalCallbacks
 
     process.stdin.resume()
     const defaultEventsOptions = {

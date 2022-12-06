@@ -1,1 +1,1 @@
-export const GLOBAL_CALLBACK_LIST_PROP_NAME = '$watchProcessDeathCallbackList'
+export const GLOBAL_CALLBACKS_PROP_NAME = '$watchProcessDeathCallbackList'

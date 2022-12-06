@@ -1,19 +1,14 @@
-import { GLOBAL_CALLBACK_LIST_PROP_NAME } from './constants'
-import { TWatchProcessDeath } from '../types'
+import { GLOBAL_CALLBACKS_PROP_NAME } from './constants'
+import { TWatchProcessDeath, TGlobalCallbacks } from '../types'
 import { startProcessDeathWatching } from './startProcessDeathWatching'
-// let isProcessWatchingStarted = false
-// globalThis.isProcessWatchingStarted = false
+import { getCallSitesIdFromNames } from './callSites'
 
 export const watchProcessDeath: TWatchProcessDeath = callback => {
-    const globalCallbackList = globalThis[GLOBAL_CALLBACK_LIST_PROP_NAME]
-    if (!globalCallbackList) {
-        console.log('startProcessDeathWatching:')
-
+    const callSitesIdFromNames = getCallSitesIdFromNames()
+    const globalCallbacks: TGlobalCallbacks =
+        globalThis[GLOBAL_CALLBACKS_PROP_NAME]
+    if (!globalCallbacks) {
         startProcessDeathWatching()
     }
-    globalCallbackList.push(callback)
-    console.log('globalCallbackList:', globalCallbackList, callback)
+    globalCallbacks[callSitesIdFromNames] = callback
 }
-
-// process.kill(process.pid, 'SIGUSR2')
-// process.kill(process.ppid, 'SIGUSR2')
