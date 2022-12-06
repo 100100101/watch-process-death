@@ -1,6 +1,6 @@
-import { GLOBAL_CALLBACKS_PROP_NAME } from './constants'
-import { TExitHandler, TGlobalCallbacks } from '../types'
-export const exitHandler: TExitHandler = async (
+import { awaitAllGlobalCallbacks } from './awaitAllGlobalCallbacks'
+import { TProcessEventHandler } from '../types'
+export const processEventHandler: TProcessEventHandler = async (
     { withExit = false, eventName },
     errorOrErrorCode
 ) => {
@@ -20,24 +20,11 @@ export const exitHandler: TExitHandler = async (
     } else if (eventName === 'uncaughtException') {
         console.error('"uncaughtException" errorOrErrorCode:', errorOrErrorCode)
         return
+    } else {
+        console.log(...logPart)
     }
 
-    if (eventName === 'exit') {
-        console.error('"exit" errorOrErrorCode:', errorOrErrorCode)
-        return
-    }
-
-    console.log(...logPart)
-
-    const globalCallbacks: TGlobalCallbacks =
-        globalThis[GLOBAL_CALLBACKS_PROP_NAME]
-
-    const globalCallbacksValues = Object.values(globalCallbacks)
-    const callbackPromises = globalCallbacksValues.map(callback =>
-        callback(eventName)
-    )
-
-    await Promise.allSettled(callbackPromises)
+    await awaitAllGlobalCallbacks(eventName)
 
     if (withExit) {
         process.exit()

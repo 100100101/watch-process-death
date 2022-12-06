@@ -1,12 +1,24 @@
 import { TStartProcessDeathWatching, TGlobalCallbacks } from '../types'
-import { exitHandler } from './exitHandler'
+import { processEventHandler } from './processEventHandler'
 import { GLOBAL_CALLBACKS_PROP_NAME } from './constants'
+import { awaitAllGlobalCallbacks } from './awaitAllGlobalCallbacks'
 
 export const startProcessDeathWatching: TStartProcessDeathWatching = (
     options = {}
 ) => {
-    const globalCallbacks: TGlobalCallbacks = {}
-    globalThis[GLOBAL_CALLBACKS_PROP_NAME] = globalCallbacks
+    let globalCallbacks: TGlobalCallbacks =
+        globalThis[GLOBAL_CALLBACKS_PROP_NAME]
+
+    if (!globalCallbacks) {
+        globalCallbacks = {}
+        globalThis[GLOBAL_CALLBACKS_PROP_NAME] = globalCallbacks
+
+        const originalProcessExit = process.exit
+        ;(process as any).exit = async function (code) {
+            await awaitAllGlobalCallbacks('exit')
+            originalProcessExit(code)
+        }
+    }
 
     process.stdin.resume()
     const defaultEventsOptions = {
@@ -36,10 +48,11 @@ export const startProcessDeathWatching: TStartProcessDeathWatching = (
     for (const eventEntry of Object.entries(eventsOptions)) {
         const [eventName, eventOptions]: any = eventEntry
         const { withExit } = eventOptions
-        process.on(eventName, exitHandler.bind(null, { eventName, withExit }))
+        process.on(
+            eventName,
+            processEventHandler.bind(null, { eventName, withExit })
+        )
     }
-
-    globalThis.isProcessWatchingStarted = true
 }
 // process.kill(process.pid, 'SIGUSR2')
 // process.kill(process.ppid, 'SIGUSR2')

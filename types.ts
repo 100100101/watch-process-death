@@ -26,13 +26,13 @@ export type TGlobalCallbacks = {
     [key: string]: TCallback
 }
 
-export type TExitHandlerOptions = {
+export type TProcessEventHandlerOptions = {
     withExit: boolean
     eventName: 'exit' | 'SIGINT' | 'SIGUSR1' | 'SIGUSR2' | 'uncaughtException'
 }
 
-export type TExitHandler = (
-    options: TExitHandlerOptions,
+export type TProcessEventHandler = (
+    options: TProcessEventHandlerOptions,
     errorOrErrorCode: string | number
 ) => Promise<void>
 
