@@ -6,4 +6,4 @@ tsNode.register({
     ignore: [/(?!.*node_modules\/(.*?)index\.ts$).*node_modules/],
 })
 const tsIndex = require('./src/index.ts')
-module.exports = tsIndex.default
+module.exports = tsIndex
