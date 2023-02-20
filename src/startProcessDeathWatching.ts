@@ -1,4 +1,4 @@
-import { TStartProcessDeathWatching, TGlobalCallbacks } from '../types'
+import { TStartProcessDeathWatching, TGlobalCallbacks } from './types'
 import { processEventHandler } from './processEventHandler'
 import { GLOBAL_CALLBACKS_PROP_NAME } from './constants'
 import { awaitAllGlobalCallbacks } from './awaitAllGlobalCallbacks'

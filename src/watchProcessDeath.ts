@@ -1,5 +1,5 @@
 import { GLOBAL_CALLBACKS_PROP_NAME } from './constants'
-import { TWatchProcessDeath, TGlobalCallbacks } from '../types'
+import { TWatchProcessDeath, TGlobalCallbacks } from './types'
 import { startProcessDeathWatching } from './startProcessDeathWatching'
 import { getCallSitesIdFromNames } from './callSites'
 

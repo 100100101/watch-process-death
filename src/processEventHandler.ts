@@ -1,5 +1,5 @@
 import { awaitAllGlobalCallbacks } from './awaitAllGlobalCallbacks'
-import { TProcessEventHandler } from '../types'
+import { TProcessEventHandler } from './types'
 export const processEventHandler: TProcessEventHandler = async (
     { withExit = false, eventName },
     errorOrErrorCode
