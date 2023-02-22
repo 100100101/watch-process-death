@@ -24,7 +24,7 @@ export const processEventHandler: TProcessEventHandler = async (
         console.log(...logPart)
     }
 
-    await awaitAllGlobalCallbacks(eventName)
+    await awaitAllGlobalCallbacks(eventName, withExit)
 
     if (withExit) {
         process.exit()

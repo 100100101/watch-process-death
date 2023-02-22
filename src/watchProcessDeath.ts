@@ -5,10 +5,13 @@ import { getCallSitesIdFromNames } from './callSites'
 
 export const watchProcessDeath: TWatchProcessDeath = callback => {
     const callSitesIdFromNames = getCallSitesIdFromNames()
-    const globalCallbacks: TGlobalCallbacks =
+
+    let globalCallbacks: TGlobalCallbacks =
         globalThis[GLOBAL_CALLBACKS_PROP_NAME]
+
     if (!globalCallbacks) {
         startProcessDeathWatching()
+        globalCallbacks = globalThis[GLOBAL_CALLBACKS_PROP_NAME]
     }
     globalCallbacks[callSitesIdFromNames] = callback
 }

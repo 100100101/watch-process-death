@@ -1,7 +1,7 @@
 import { TStartProcessDeathWatching, TGlobalCallbacks } from './types'
 import { processEventHandler } from './processEventHandler'
 import { GLOBAL_CALLBACKS_PROP_NAME } from './constants'
-import { awaitAllGlobalCallbacks } from './awaitAllGlobalCallbacks'
+// import { awaitAllGlobalCallbacks } from './awaitAllGlobalCallbacks'
 
 export const startProcessDeathWatching: TStartProcessDeathWatching = (
     options = {}
@@ -15,7 +15,7 @@ export const startProcessDeathWatching: TStartProcessDeathWatching = (
 
         const originalProcessExit = process.exit
         ;(process as any).exit = async function (code) {
-            await awaitAllGlobalCallbacks('exit')
+            // await awaitAllGlobalCallbacks('exit', true)
             originalProcessExit(code)
         }
     }
@@ -38,7 +38,6 @@ export const startProcessDeathWatching: TStartProcessDeathWatching = (
             withExit: true,
         },
         // catches uncaught exceptions
-        // отлавливает exceptions и не дает завершиться процессу
         uncaughtException: {
             withExit: true,
         },
@@ -48,10 +47,11 @@ export const startProcessDeathWatching: TStartProcessDeathWatching = (
     for (const eventEntry of Object.entries(eventsOptions)) {
         const [eventName, eventOptions]: any = eventEntry
         const { withExit } = eventOptions
-        process.on(
+        const bindedProcessEventHandler = processEventHandler.bind(null, {
             eventName,
-            processEventHandler.bind(null, { eventName, withExit })
-        )
+            withExit,
+        })
+        process.on(eventName, bindedProcessEventHandler)
     }
 }
 // process.kill(process.pid, 'SIGUSR2')
