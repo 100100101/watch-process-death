@@ -2,10 +2,14 @@
 # yarn lockfile v1
 
 
-"@types/node@^18.11.11":
-  version "18.11.11"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.11.tgz#1d455ac0211549a8409d3cdb371cd55cc971e8dc"
-  integrity sha512-KJ021B1nlQUBLopzZmPBVuGU9un7WJd/W4ya7Ih02B4Uwky5Nja0yGYav2EfYIk0RR2Q9oVhf60S2XR1BCWJ2g==
+"@types/node@^18.14.0":
+  version "18.14.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.14.0.tgz#94c47b9217bbac49d4a67a967fdcdeed89ebb7d0"
+  integrity sha512-5EWrvLmglK+imbCJY0+INViFWUHg1AHel1sq4ZVSfdcNqGy9Edv3UB9IIzzg+xPaUcAgZYcfVs2fBcwDeZzU0A==
+
+"package-auto-tsc@git+https://github.com/JSerGit/package-auto-tsc.git":
+  version "1.0.0"
+  resolved "git+https://github.com/JSerGit/package-auto-tsc.git#f9ff2944f2408a3aba834bff43e165458e6c21c5"
 
 typescript@^4.9.5:
   version "4.9.5"
