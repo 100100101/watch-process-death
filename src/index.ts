@@ -1,4 +1,5 @@
 /// <reference types="node" />
+
 export * from './startProcessDeathWatching'
 export * from './watchProcessDeath'
 

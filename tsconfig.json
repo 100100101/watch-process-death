@@ -7,14 +7,12 @@
     // "module": "ESNext",
     "module": "CommonJS",
     "strict": true,
-    "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": false,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "importHelpers": true,
     "moduleResolution": "node",
-    "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
@@ -29,6 +27,10 @@
     //   "./node_modules/@types",
     //   "types"
     // ],
+    // "incremental": true, /* Enable incremental compilation */
+    "declaration": true, /* Concatenate & emit output to single file.*/
+    "skipLibCheck": true, /* Skip type checking of declaration files. */
+    "forceConsistentCasingInFileNames": true /* Disallow inconsistently */
   },
   "include": [
     "./src"

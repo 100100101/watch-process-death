@@ -1,3 +1,5 @@
+// declare namespace Test {}
+// declare var d3: Test.test
 export type TStartProcessDeathWatchingOptions = {
     exit?: {
         withExit: boolean
