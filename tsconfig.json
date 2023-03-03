@@ -1,10 +1,8 @@
 {
   "compilerOptions": {
-    "outDir": "lib",
-    // "outDir": "./out",
-    "allowJs": true, //enables the build without .ts files
+    "outDir": "./lib",
+    "allowJs": true,
     "target": "ESNext",
-    // "module": "ESNext",
     "module": "CommonJS",
     "strict": true,
     "noFallthroughCasesInSwitch": true,
@@ -23,14 +21,9 @@
         "./*"
       ],
     },
-    // "typeRoots": [
-    //   "./node_modules/@types",
-    //   "types"
-    // ],
-    // "incremental": true, /* Enable incremental compilation */
-    "declaration": true, /* Concatenate & emit output to single file.*/
-    "skipLibCheck": true, /* Skip type checking of declaration files. */
-    "forceConsistentCasingInFileNames": true /* Disallow inconsistently */
+    "declaration": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
   },
   "include": [
     "./src"
