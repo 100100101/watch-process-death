@@ -1,6 +1,6 @@
 {
     "name": "watch-process-death",
-    "version": "1.0.35",
+    "version": "1.0.36",
     "description": "Watching the death of Node.js process",
     "main": "./index.js",
     "types": "./lib/index.d.ts",
