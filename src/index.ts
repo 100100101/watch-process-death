@@ -41,7 +41,7 @@ export class WatchProcessDeath {
     }
     options: TStartProcessDeathWatchingOptions = null
     globalCallbacks: TGlobalCallbacks = null
-    constructor(options: TStartProcessDeathWatchingOptions) {
+    constructor(options?: TStartProcessDeathWatchingOptions) {
         const isModuleInitiatedPrevious =
             !!globalThis[GLOBAL_CALLBACKS_PROP_NAME]
         this.options = {
