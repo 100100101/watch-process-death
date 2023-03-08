@@ -10,5 +10,5 @@ export declare class WatchProcessDeath {
     readonly defaultEventsOptions: TStartProcessDeathWatchingDefaultOptions;
     options: TStartProcessDeathWatchingOptions;
     globalCallbacks: TGlobalCallbacks;
-    constructor(options?: TStartProcessDeathWatchingOptions);
+    constructor(options?: TStartProcessDeathWatchingOptions | undefined);
 }

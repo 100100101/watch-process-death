@@ -12,7 +12,8 @@ import {
 } from '../types'
 // process.kill(process.pid, 'SIGUSR2')
 // process.kill(process.ppid, 'SIGUSR2')
-type TConstructor = TStartProcessDeathWatchingOptions | unknown | undefined
+// type TConstructor = TStartProcessDeathWatchingOptions | unknown | undefined
+type TConstructor = () => void
 export class WatchProcessDeath {
     addMiddleware = addMiddleware
     private startProcessDeathWatching = startProcessDeathWatching
@@ -43,9 +44,7 @@ export class WatchProcessDeath {
     options: TStartProcessDeathWatchingOptions = null
     globalCallbacks: TGlobalCallbacks = null
 
-    constructor(options?: TStartProcessDeathWatchingOptions) {
-        console.log(1234)
-
+    constructor(options?: TStartProcessDeathWatchingOptions | undefined) {
         const isModuleInitiatedPrevious =
             !!globalThis[GLOBAL_CALLBACKS_PROP_NAME]
         this.options = {
