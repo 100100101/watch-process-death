@@ -1,0 +1,1 @@
+{"version":3,"file":"getGlobalCallbacks.js","sourceRoot":"","sources":["../src/getGlobalCallbacks.ts"],"names":[],"mappings":";;AAAA,2CAAwD;AAGxD;IACI,IAAI,eAAe,GACf,UAAU,CAAC,sCAA0B,CAAC,CAAA;IAE1C,IAAI,CAAC,eAAe,EAAE;QAClB,eAAe,GAAG,EAAE,CAAA;QACpB,UAAU,CAAC,sCAA0B,CAAC,GAAG,eAAe,CAAA;KAC3D;IACD,OAAO,eAAe,CAAA;AAC1B,CAAC;AATD,4BASC"}

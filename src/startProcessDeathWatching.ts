@@ -1,56 +1,44 @@
-import { TStartProcessDeathWatching, TGlobalCallbacks } from '../types'
-import { processEventHandler } from './processEventHandler'
-import { GLOBAL_CALLBACKS_PROP_NAME } from './constants'
-// import { awaitAllGlobalCallbacks } from './awaitAllGlobalCallbacks'
+import {
+    TStartProcessDeathWatching,
+    TEventNames,
+    TStartProcessDeathWatchingDefaultOptions,
+} from '../types'
+import { WatchProcessDeath } from './'
+export const startProcessDeathWatching: TStartProcessDeathWatching = function (
+    this: WatchProcessDeath
+) {
+    const options = this.options
 
-export const startProcessDeathWatching: TStartProcessDeathWatching = (
-    options = {}
-) => {
-    let globalCallbacks: TGlobalCallbacks =
-        globalThis[GLOBAL_CALLBACKS_PROP_NAME]
-
-    if (!globalCallbacks) {
-        globalCallbacks = {}
-        globalThis[GLOBAL_CALLBACKS_PROP_NAME] = globalCallbacks
-
-        const originalProcessExit = process.exit
-        ;(process as any).exit = async function (code) {
-            // await awaitAllGlobalCallbacks('exit', true)
-            originalProcessExit(code)
-        }
+    if (!options) return
+    const originalProcessExit = process.exit
+    ;(process as any).exit = async function (code) {
+        // await awaitAllGlobalCallbacks('exit', true)
+        originalProcessExit(code)
     }
 
     process.stdin.resume()
-    const defaultEventsOptions = {
-        // do something when app is closing
-        exit: {
-            withExit: true,
-        },
-        // catches ctrl+c event
-        SIGINT: {
-            withExit: true,
-        },
-        //  catches "kill pid" (for example: nodemon restart)
-        SIGUSR1: {
-            withExit: true,
-        },
-        SIGUSR2: {
-            withExit: true,
-        },
-        // catches uncaught exceptions
-        uncaughtException: {
-            withExit: true,
-        },
-    }
-    const eventsOptions = Object.assign(defaultEventsOptions, options)
 
-    for (const eventEntry of Object.entries(eventsOptions)) {
-        const [eventName, eventOptions]: any = eventEntry
-        const { withExit } = eventOptions
-        const bindedProcessEventHandler = processEventHandler.bind(null, {
-            eventName,
-            withExit,
-        })
+    type ValueOf<T> = T[keyof T]
+    const eventsOptionsEntries = Object.entries(options) as [
+        TEventNames,
+        ValueOf<TStartProcessDeathWatchingDefaultOptions>
+    ][]
+
+    for (const [eventName, eventOptions] of eventsOptionsEntries) {
+        let withExit = eventOptions?.withExit
+        if (withExit === undefined) {
+            withExit = this.defaultEventsOptions[eventName].withExit
+        }
+
+        const bindedProcessEventHandler = errorCode => {
+            return this.processEventHandler(
+                {
+                    eventName,
+                    withExit,
+                },
+                errorCode
+            )
+        }
         process.on(eventName, bindedProcessEventHandler)
     }
 }

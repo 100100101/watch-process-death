@@ -1,4 +1,4 @@
-export const getCallSites = () => {
+export const getStackTrace = () => {
     const _prepareStackTrace = Error.prepareStackTrace
     Error.prepareStackTrace = (_, stack) => stack
 
@@ -10,7 +10,7 @@ export const getCallSites = () => {
 export const getCallerCallSite = ({ depth = 0 } = {}) => {
     const callers: any[] = []
     const callerFileSet = new Set()
-    const callSites = getCallSites()
+    const callSites = getStackTrace()
 
     for (const callSite of callSites) {
         const fileName = callSite.getFileName()
@@ -27,11 +27,10 @@ export const getCallerCallSite = ({ depth = 0 } = {}) => {
     }
 }
 
-export const getCallSitesIdFromNames = () => {
-    const callSites = getCallSites()
+export const getIdFromStackTrace = (stackTrace: any) => {
     let idFromNames = ''
     let i = 0
-    for (const callSite of callSites) {
+    for (const callSite of stackTrace) {
         const fileName = callSite.getFileName()
         const idPart = fileName || ''
         idFromNames += `${i} ${idPart}\n`

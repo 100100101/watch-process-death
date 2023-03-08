@@ -1,1 +1,2 @@
-export declare const awaitAllGlobalCallbacks: (eventName: any, withExit: any) => Promise<void>;
+import { WatchProcessDeath } from './';
+export declare function awaitAllGlobalCallbacks(this: WatchProcessDeath, eventName: any, withExit: any): Promise<void>;
