@@ -14,7 +14,7 @@ export const CEventNames = {
 } as const
 
 export const eventNames = Object.values(CEventNames)
-export type TStartProcessDeathWatchingOptions = {
+export type TWatchProcessDeathOptions = {
     events: {
         [CEventNames.EXIT]: {
             withExit: boolean
@@ -34,13 +34,21 @@ export type TStartProcessDeathWatchingOptions = {
     }
     callbacksAggregatePendingMs: number
 }
+type DeepPartial<T> = T extends object
+    ? {
+          [P in keyof T]?: DeepPartial<T[P]>
+      }
+    : T
+export type TWatchProcessDeathUserOptions =
+    | DeepPartial<TWatchProcessDeathOptions>
+    | undefined
 
 export type TEventNames = (typeof eventNames)[number]
 // export type TEventNamesKeys = keyof typeof CEventNames
 // export type TEventNamesValues = (typeof CEventNames)[TEventNamesKeys]
 
 export type TStartProcessDeathWatching = (
-    options?: TStartProcessDeathWatchingOptions
+    options?: TWatchProcessDeathOptions
 ) => void
 
 export type TCallback = (eventName: TEventNames, withExit: boolean) => any

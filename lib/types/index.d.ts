@@ -6,7 +6,7 @@ export declare const CEventNames: {
     readonly UNCAUGHT_EXCEPTION: "uncaughtException";
 };
 export declare const eventNames: ("exit" | "SIGINT" | "SIGUSR1" | "SIGUSR2" | "uncaughtException")[];
-export type TStartProcessDeathWatchingOptions = {
+export type TWatchProcessDeathOptions = {
     events: {
         [CEventNames.EXIT]: {
             withExit: boolean;
@@ -26,8 +26,12 @@ export type TStartProcessDeathWatchingOptions = {
     };
     callbacksAggregatePendingMs: number;
 };
+type DeepPartial<T> = T extends object ? {
+    [P in keyof T]?: DeepPartial<T[P]>;
+} : T;
+export type TWatchProcessDeathUserOptions = DeepPartial<TWatchProcessDeathOptions> | undefined;
 export type TEventNames = (typeof eventNames)[number];
-export type TStartProcessDeathWatching = (options?: TStartProcessDeathWatchingOptions) => void;
+export type TStartProcessDeathWatching = (options?: TWatchProcessDeathOptions) => void;
 export type TCallback = (eventName: TEventNames, withExit: boolean) => any;
 export type TCallbackRecord = {
     eventName: TEventNames | '';

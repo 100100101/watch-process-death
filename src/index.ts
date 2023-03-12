@@ -4,19 +4,22 @@ import getGlobalWatchProcessDeath from './getGlobalWatchProcessDeath'
 import { addMiddleware } from './addMiddleware'
 import { GLOBAL_WATCH_PROCESS_DEATH_PROP_NAME } from './constants'
 import { aggregateAndCallCallbacks } from './aggregateAndCallCallbacks'
+import { mergeDeep } from './mergeDeep'
 import {
     TGlobalCallbacks,
-    TStartProcessDeathWatchingOptions,
+    TWatchProcessDeathOptions,
     TGlobalWatchProcessDeath,
+    TWatchProcessDeathUserOptions,
 } from './types'
 // process.kill(process.pid, 'SIGUSR2')
 // process.kill(process.ppid, 'SIGUSR2')
+
 export class WatchProcessDeath {
     private startProcessDeathWatching = startProcessDeathWatching
     addMiddleware = addMiddleware
     getGlobalWatchProcessDeath = getGlobalWatchProcessDeath
     aggregateAndCallCallbacks = aggregateAndCallCallbacks
-    readonly defaultOptions: TStartProcessDeathWatchingOptions = {
+    readonly defaultOptions: TWatchProcessDeathOptions = {
         events: {
             // app is closing
             exit: {
@@ -40,33 +43,20 @@ export class WatchProcessDeath {
         },
         callbacksAggregatePendingMs: 1000,
     }
-    // options: Partial<TStartProcessDeathWatchingOptions> | null = null
-    options: TStartProcessDeathWatchingOptions = this.defaultOptions
+    options: TWatchProcessDeathOptions = this.defaultOptions
     globalCallbackRecords: TGlobalCallbacks = null
     globalWatchProcessDeath: TGlobalWatchProcessDeath = null
 
-    constructor(
-        options?: Partial<TStartProcessDeathWatchingOptions> | undefined
-    ) {
+    constructor(options: TWatchProcessDeathUserOptions) {
         const isModuleInitiatedPrevious =
             !!globalThis[GLOBAL_WATCH_PROCESS_DEATH_PROP_NAME]
 
-        const optionsEvents = options?.events
-        const optionsCallbacksAggregatePendingMs =
-            options?.callbacksAggregatePendingMs
-        const defaultOptionsEvents = this.defaultOptions.events
-        const defaultOptionsCallbacksAggregatePendingMs =
-            this.defaultOptions.callbacksAggregatePendingMs
-
-        this.options = {
-            events: {
-                ...defaultOptionsEvents,
-                ...optionsEvents,
-            },
-            callbacksAggregatePendingMs:
-                optionsCallbacksAggregatePendingMs ||
-                defaultOptionsCallbacksAggregatePendingMs,
+        if (options) {
+            this.options = mergeDeep({}, this.defaultOptions, options)
+        } else {
+            this.options = mergeDeep({}, this.defaultOptions)
         }
+
         if (!isModuleInitiatedPrevious) {
             this.startProcessDeathWatching()
         }
