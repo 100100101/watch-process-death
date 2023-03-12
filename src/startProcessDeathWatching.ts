@@ -1,8 +1,4 @@
-import {
-    TStartProcessDeathWatching,
-    TEventNames,
-    TStartProcessDeathWatchingDefaultOptions,
-} from '../types'
+import { TStartProcessDeathWatching, eventNames } from './types'
 import { WatchProcessDeath } from './'
 export const startProcessDeathWatching: TStartProcessDeathWatching = function (
     this: WatchProcessDeath
@@ -15,32 +11,31 @@ export const startProcessDeathWatching: TStartProcessDeathWatching = function (
         // await awaitAllGlobalCallbacks('exit', true)
         originalProcessExit(code)
     }
-
     process.stdin.resume()
-
-    type ValueOf<T> = T[keyof T]
-    const eventsOptionsEntries = Object.entries(options) as [
-        TEventNames,
-        ValueOf<TStartProcessDeathWatchingDefaultOptions>
-    ][]
-
-    for (const [eventName, eventOptions] of eventsOptionsEntries) {
+    for (const eventName of eventNames) {
+        const eventOptions = options.events[eventName]
         let withExit = eventOptions?.withExit
         if (withExit === undefined) {
-            withExit = this.defaultEventsOptions[eventName].withExit
+            withExit = this.defaultOptions.events[eventName].withExit
         }
-
-        const bindedProcessEventHandler = errorCode => {
-            return this.processEventHandler(
-                {
-                    eventName,
-                    withExit,
-                },
-                errorCode
-            )
+        const processEventHandler = async errorOrErrorCode => {
+            const isErrorCode = typeof errorOrErrorCode === 'number'
+            const logPart = `\x1b[42m\x1b[30mwatch-process-death\nEvent: ${eventName}\nWith process exit: ${withExit}\x1b[0m`
+            if (isErrorCode) {
+                const isSuccessCode = errorOrErrorCode === 0
+                const message = isSuccessCode ? 'Is success event' : ''
+                console.log(logPart, '\n', 'Message:', message)
+            } else if (eventName === 'uncaughtException') {
+                console.error(
+                    '"uncaughtException" errorOrErrorCode:',
+                    errorOrErrorCode
+                )
+                return
+            } else {
+                console.log(logPart)
+            }
+            this.aggregateAndCallCallbacks(eventName, withExit)
         }
-        process.on(eventName, bindedProcessEventHandler)
+        process.on(eventName, processEventHandler)
     }
 }
-// process.kill(process.pid, 'SIGUSR2')
-// process.kill(process.ppid, 'SIGUSR2')

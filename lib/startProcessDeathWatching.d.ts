@@ -1,2 +1,2 @@
-import { TStartProcessDeathWatching } from '../types';
+import { TStartProcessDeathWatching } from './types';
 export declare const startProcessDeathWatching: TStartProcessDeathWatching;

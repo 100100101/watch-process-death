@@ -1,14 +1,13 @@
-import { awaitAllGlobalCallbacks } from './awaitAllGlobalCallbacks';
-import getGlobalCallbacks from './getGlobalCallbacks';
-import { TGlobalCallbacks, TStartProcessDeathWatchingOptions, TStartProcessDeathWatchingDefaultOptions } from '../types';
+import getGlobalWatchProcessDeath from './getGlobalWatchProcessDeath';
+import { TGlobalCallbacks, TStartProcessDeathWatchingOptions, TGlobalWatchProcessDeath } from './types';
 export declare class WatchProcessDeath {
-    addMiddleware: import("../types").TAddMiddleware;
     private startProcessDeathWatching;
-    awaitAllGlobalCallbacks: typeof awaitAllGlobalCallbacks;
-    getGlobalCallbacks: typeof getGlobalCallbacks;
-    processEventHandler: import("../types").TProcessEventHandler;
-    readonly defaultEventsOptions: TStartProcessDeathWatchingDefaultOptions;
+    addMiddleware: import("./types").TAddMiddleware;
+    getGlobalWatchProcessDeath: typeof getGlobalWatchProcessDeath;
+    aggregateAndCallCallbacks: (this: WatchProcessDeath, eventName: "exit" | "SIGINT" | "SIGUSR1" | "SIGUSR2" | "uncaughtException", withExit: boolean) => Promise<void>;
+    readonly defaultOptions: TStartProcessDeathWatchingOptions;
     options: TStartProcessDeathWatchingOptions;
-    globalCallbacks: TGlobalCallbacks;
-    constructor(options?: TStartProcessDeathWatchingOptions | undefined);
+    globalCallbackRecords: TGlobalCallbacks;
+    globalWatchProcessDeath: TGlobalWatchProcessDeath;
+    constructor(options?: Partial<TStartProcessDeathWatchingOptions> | undefined);
 }

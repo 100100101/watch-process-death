@@ -1,59 +1,79 @@
 /// <reference types="node" />
-import { awaitAllGlobalCallbacks } from './awaitAllGlobalCallbacks'
 import { startProcessDeathWatching } from './startProcessDeathWatching'
-import getGlobalCallbacks from './getGlobalCallbacks'
+import getGlobalWatchProcessDeath from './getGlobalWatchProcessDeath'
 import { addMiddleware } from './addMiddleware'
-import { processEventHandler } from './processEventHandler'
-import { GLOBAL_CALLBACKS_PROP_NAME } from './constants'
+import { GLOBAL_WATCH_PROCESS_DEATH_PROP_NAME } from './constants'
+import { aggregateAndCallCallbacks } from './aggregateAndCallCallbacks'
 import {
     TGlobalCallbacks,
     TStartProcessDeathWatchingOptions,
-    TStartProcessDeathWatchingDefaultOptions,
-} from '../types'
+    TGlobalWatchProcessDeath,
+} from './types'
 // process.kill(process.pid, 'SIGUSR2')
 // process.kill(process.ppid, 'SIGUSR2')
-// type TConstructor = TStartProcessDeathWatchingOptions | unknown | undefined
-type TConstructor = () => void
 export class WatchProcessDeath {
-    addMiddleware = addMiddleware
     private startProcessDeathWatching = startProcessDeathWatching
-    awaitAllGlobalCallbacks = awaitAllGlobalCallbacks
-    getGlobalCallbacks = getGlobalCallbacks
-    processEventHandler = processEventHandler
-    readonly defaultEventsOptions: TStartProcessDeathWatchingDefaultOptions = {
-        // app is closing
-        exit: {
-            withExit: true,
+    addMiddleware = addMiddleware
+    getGlobalWatchProcessDeath = getGlobalWatchProcessDeath
+    aggregateAndCallCallbacks = aggregateAndCallCallbacks
+    readonly defaultOptions: TStartProcessDeathWatchingOptions = {
+        events: {
+            // app is closing
+            exit: {
+                withExit: true,
+            },
+            // catches ctrl+c event
+            SIGINT: {
+                withExit: true,
+            },
+            //  catches "kill pid" (for example: nodemon restart)
+            SIGUSR1: {
+                withExit: true,
+            },
+            SIGUSR2: {
+                withExit: true,
+            },
+            // catches uncaught exceptions
+            uncaughtException: {
+                withExit: true,
+            },
         },
-        // catches ctrl+c event
-        SIGINT: {
-            withExit: true,
-        },
-        //  catches "kill pid" (for example: nodemon restart)
-        SIGUSR1: {
-            withExit: true,
-        },
-        SIGUSR2: {
-            withExit: true,
-        },
-        // catches uncaught exceptions
-        uncaughtException: {
-            withExit: true,
-        },
+        callbacksAggregatePendingMs: 1000,
     }
-    options: TStartProcessDeathWatchingOptions = null
-    globalCallbacks: TGlobalCallbacks = null
+    // options: Partial<TStartProcessDeathWatchingOptions> | null = null
+    options: TStartProcessDeathWatchingOptions = this.defaultOptions
+    globalCallbackRecords: TGlobalCallbacks = null
+    globalWatchProcessDeath: TGlobalWatchProcessDeath = null
 
-    constructor(options?: TStartProcessDeathWatchingOptions | undefined) {
+    constructor(
+        options?: Partial<TStartProcessDeathWatchingOptions> | undefined
+    ) {
         const isModuleInitiatedPrevious =
-            !!globalThis[GLOBAL_CALLBACKS_PROP_NAME]
+            !!globalThis[GLOBAL_WATCH_PROCESS_DEATH_PROP_NAME]
+
+        const optionsEvents = options?.events
+        const optionsCallbacksAggregatePendingMs =
+            options?.callbacksAggregatePendingMs
+        const defaultOptionsEvents = this.defaultOptions.events
+        const defaultOptionsCallbacksAggregatePendingMs =
+            this.defaultOptions.callbacksAggregatePendingMs
+
         this.options = {
-            ...this.defaultEventsOptions,
-            ...options,
+            events: {
+                ...defaultOptionsEvents,
+                ...optionsEvents,
+            },
+            callbacksAggregatePendingMs:
+                optionsCallbacksAggregatePendingMs ||
+                defaultOptionsCallbacksAggregatePendingMs,
         }
         if (!isModuleInitiatedPrevious) {
             this.startProcessDeathWatching()
         }
-        this.globalCallbacks = getGlobalCallbacks()
+        this.globalWatchProcessDeath = getGlobalWatchProcessDeath()
+        const callbackRecords = this.globalWatchProcessDeath?.callbackRecords
+        if (callbackRecords) {
+            this.globalCallbackRecords = callbackRecords
+        }
     }
 }
